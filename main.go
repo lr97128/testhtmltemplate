@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+type User struct {
+	Name     string
+	Password string
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./index.html")
 	if err != nil {
@@ -21,17 +26,22 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("read html file failed, err:", err)
 		return
 	}
-	var str string
+	// var str string
 	r.ParseForm() //先要解析form表单
 	username := r.Form.Get("username")
 	passwd := r.Form.Get("passwd")
 	fmt.Println("username:", username, " passwd:", passwd)
-	if username == "liurui" && passwd == "1234" {
-		str = "认证通过"
-	} else {
-		str = "认证失败"
+	var user = User{
+		Name:     username,
+		Password: passwd,
 	}
-	t.Execute(w, str)
+	// if username == "liurui" && passwd == "1234" {
+	// 	str = "认证通过"
+	// 	t.Execute(w, str)
+	// } else {
+	// 	str = "认证失败"
+	// }
+	t.Execute(w, user)
 }
 
 func main() {
